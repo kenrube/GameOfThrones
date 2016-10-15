@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+
+repositories {
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+android {
+    // Declared in dependencies.gradle in the root of the project.
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        applicationId "org.odddev.gameofthrones"
+
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+
+        versionCode versions.major * 1000 + versions.minor * 100 + versions.patch
+        versionName "${versions.major}.${versions.minor}.${versions.patch}"
+
+        archivesBaseName = "GameOfThrones-{$versionName}"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    buildTypes {
+        def STRING = "String"
+        def APP_NAME = "app_name"
+        def API_URL = "API_URL"
+        def string = "string"
+
+        debug {
+            buildConfigField STRING, API_URL, urls.api
+
+            resValue string, APP_NAME, resVals.appNameDebug
+
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+
+            minifyEnabled false
+            shrinkResources false
+
+            return true
+        }
+
+        release {
+            buildConfigField STRING, API_URL, urls.api
+
+            resValue string, APP_NAME, resVals.appName
+
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+
+    lintOptions {
+        warningsAsErrors true
+        abortOnError true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+
+        return true
+    }
+}
+
+dependencies {
+    compile libraries.dagger
+    apt libraries.daggerCompiler
+
+    compile libraries.rxJava
+    compile libraries.rxAndroid
+    compile libraries.rxLint
+
+    compile libraries.okHttpLoggingInterceptor
+    compile libraries.retrofit
+    compile libraries.retrofitRxJavaAdapter
+    compile libraries.retrofitGsonConverter
+
+    compile libraries.supportAnnotations
+    compile libraries.supportAppCompat
+    compile libraries.supportDesign
+
+    compile libraries.glide
+
+    compile libraries.timber
+
+    // Debug tools
+    debugCompile libraries.stetho
+    debugCompile libraries.stethoOkHttp
+}
