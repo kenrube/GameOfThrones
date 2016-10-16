@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author kenrube
- * @date 13.10.16
+ * @date 16.10.16
  */
 
 public class House {

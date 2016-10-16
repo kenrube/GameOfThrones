@@ -2,18 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.odddev.gameofthrones">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
+        android:name=".core.GOTApllication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:supportsRtl="true"
+        android:icon="@drawable/lannister_icon"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".splash.SplashActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
+        <activity android:name=".houses.HousesActivity"/>
+        <activity android:name=".character.CharacterActivity"/>
     </application>
 
 </manifest>

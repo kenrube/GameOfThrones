@@ -1,29 +1,18 @@
 package org.odddev.gameofthrones.splash.data;
 
-import android.databinding.Bindable;
-import android.databinding.Observable;
-import android.os.Parcelable;
-
-import io.requery.CascadeAction;
-import io.requery.Entity;
-import io.requery.Key;
-import io.requery.OneToMany;
-import io.requery.Persistable;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author kenrube
- * @date 13.10.16
+ * @date 16.10.16
  */
 
-@Entity
-public interface HouseRow extends Observable, Parcelable, Persistable {
+public class HouseRow implements Serializable {
 
-    @Key
-    int getId();
+    public int id;
 
-    @Bindable
-    String getWords();
+    public String words;
 
-    @OneToMany(mappedBy = "allegiance", cascade = {CascadeAction.DELETE, CascadeAction.SAVE})
-    List<CharacterRow> getCharactersList();
+    public List<Integer> charactersList;
 }

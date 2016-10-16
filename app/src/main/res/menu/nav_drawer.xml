@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/nav_stark"
+        android:icon="@drawable/ic_people_black_24dp"
+        android:title="@string/nav.stark"/>
+
+    <item
+        android:id="@+id/nav_lannister"
+        android:icon="@drawable/ic_people_black_24dp"
+        android:title="@string/nav.lannister"/>
+
+    <item
+        android:id="@+id/nav_targaryen"
+        android:icon="@drawable/ic_people_black_24dp"
+        android:title="@string/nav.targaryen"/>
+
 </menu>

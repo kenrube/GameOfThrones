@@ -1,7 +1,6 @@
 package org.odddev.gameofthrones.houses;
 
 import org.odddev.gameofthrones.R;
-import org.odddev.gameofthrones.core.utils.FragmentUtils;
 import org.odddev.gameofthrones.databinding.HousesActivityBinding;
 import org.odddev.gameofthrones.splash.data.HouseItem;
 
@@ -9,13 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.IntDef;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.IntentCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -54,12 +57,19 @@ public class HousesActivity extends AppCompatActivity {
         mBinding.tabs.setupWithViewPager(mBinding.viewpager);
         setHouseId(R.id.nav_stark);
 
-        mBinding.navigationView.setNavigationItemSelectedListener(item -> {
-                @NAV_DRAWER_ITEM int itemId = item.getItemId();
+        mBinding.navigationView.setNavigationItemSelectedListener(mNavigationListener);
 
-                mBinding.navigationView.setCheckedItem(itemId);
-                return setHouseId(itemId);
-            });
+        initToolbar();
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(mBinding.toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.houses_toolbar_title);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public boolean setHouseId(@NAV_DRAWER_ITEM int houseId) {
@@ -82,13 +92,41 @@ public class HousesActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter  =
-                new ViewPagerAdapter(FragmentUtils.getFragmentManager(this));
+                new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new HouseFragment(HouseItem.STARK), getString(houseTitles[0]));
         adapter.addFragment(new HouseFragment(HouseItem.LANNISTER), getString(houseTitles[1]));
         adapter.addFragment(new HouseFragment(HouseItem.TARGARYEN), getString(houseTitles[2]));
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                mBinding.drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    NavigationView.OnNavigationItemSelectedListener mNavigationListener = item -> {
+        @NAV_DRAWER_ITEM int itemId = item.getItemId();
+
+        mBinding.navigationView.setCheckedItem(itemId);
+        mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+        return setHouseId(itemId);
+    };
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

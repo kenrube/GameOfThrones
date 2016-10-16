@@ -4,14 +4,14 @@ import android.support.annotation.IntDef;
 
 /**
  * @author kenrube
- * @date 13.10.16
+ * @date 16.10.16
  */
 
 @IntDef({
         HouseItem.LANNISTER,
         HouseItem.STARK,
         HouseItem.TARGARYEN})
-@interface HouseItem {
+public @interface HouseItem {
 
     int LANNISTER = 229;
     int STARK = 362;

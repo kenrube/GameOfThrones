@@ -1,2 +1,23 @@
 <resources>
+
+    <string name="empty"></string>
+
+    <string name="houses.toolbar.title">Game of Thrones</string>
+
+    <string name="nav.stark">STARKS</string>
+    <string name="nav.lannister">LANNISTERS</string>
+    <string name="nav.targaryen">TARGARYENS</string>
+
+    <string name="character.message.died">Персонаж умер в %1$s сезоне</string>
+    <string name="splash.progress.loaded">%1$d / %2$d</string>
+    <string name="splash.error.connection">Отстутствует подключение к Интернету!</string>
+    
+    <string name="character.section.words">Words:</string>
+    <string name="character.section.born">Born:</string>
+    <string name="character.section.died">Died:</string>
+    <string name="character.section.titles">Titles:</string>
+    <string name="character.section.aliases">Aliases:</string>
+    <string name="character.section.father">Father:</string>
+    <string name="character.section.mother">Mother:</string>
+
 </resources>
