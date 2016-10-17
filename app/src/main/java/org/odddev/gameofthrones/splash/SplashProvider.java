@@ -80,7 +80,7 @@ public class SplashProvider implements ISplashProvider {
                 .flatMap(Observable::from)
                 .map(house -> saveHouseToDb(house).charactersList)
                 .flatMap(Observable::from)
-                .flatMap(characterId -> mServerApi.getCharacter(characterId))
+                .flatMap(characterId -> mServerApi.getCharacter(characterId), 4)
                 .map(this::saveCharacterToDb)
                 .compose(mSchedulersResolver.applyDefaultSchedulers());
     }

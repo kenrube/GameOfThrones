@@ -14,6 +14,6 @@ public class StringUtils {
         for (int i = 0; i < strings.size(); i++) {
             result += strings.get(i) + "\n";
         }
-        return result;
+        return result.trim();
     }
 }

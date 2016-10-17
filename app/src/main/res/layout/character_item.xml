@@ -54,6 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/list_secondary_text_size"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:text="@{character.titles.size() != 0 ? character.titles.get(0) : @string/empty}"
                 android:visibility="@{character.titles.size() != 0}"
                 tools:text="Lord Commander of the Night's Watch"/>
