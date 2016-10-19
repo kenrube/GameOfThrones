@@ -4,7 +4,6 @@ import org.odddev.gameofthrones.R;
 import org.odddev.gameofthrones.core.di.Injector;
 import org.odddev.gameofthrones.core.layers.presenter.PresenterManager;
 import org.odddev.gameofthrones.core.network.INetworkChecker;
-import org.odddev.gameofthrones.core.storage.StorageManager;
 import org.odddev.gameofthrones.databinding.SplashActivityBinding;
 import org.odddev.gameofthrones.houses.HousesActivity;
 
@@ -34,9 +33,6 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     private boolean timerEnded;
 
     @Inject
-    StorageManager mStorageManager;
-
-    @Inject
     INetworkChecker mNetworkChecker;
 
     @Override
@@ -49,23 +45,19 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
         startTimer();
 
         mPresenter = PresenterManager.getPresenter(PRESENTER_ID, SplashPresenter::new);
-
-        if (!mNetworkChecker.isConnected()) {
-            showError(getString(R.string.splash_error_connection));
-            mBinding.setShowProgress(false);
-        } else if (!mStorageManager.isDbEmpty()) {
-            dataLoaded = true;
-            mBinding.setShowProgress(false);
-        } else {
-            mPresenter.loadData();
-            mBinding.setShowProgress(true);
-        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mPresenter.attachView(this);
+
+        if (!mNetworkChecker.isConnected()) {
+            showError(getString(R.string.splash_error_connection));
+            mBinding.setShowProgress(false);
+        } else {
+            checkDbEmpty();
+        }
     }
 
     @Override
@@ -77,10 +69,25 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     private void startTimer() {
         new Handler().postDelayed(() -> {
             if (dataLoaded) {
-                openMainActivity();
+                openHousesActivity();
             }
             timerEnded = true;
         }, TIMER_DURATION);
+    }
+
+    private void checkDbEmpty() {
+        mPresenter.checkDbEmpty();
+    }
+
+    @Override
+    public void reportDbState(boolean isEmpty) {
+        if (!isEmpty) {
+            dataLoaded = true;
+            mBinding.setShowProgress(false);
+        } else {
+            mPresenter.loadData();
+            mBinding.setShowProgress(true);
+        }
     }
 
     @Override
@@ -90,12 +97,12 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
         if (charactersLoaded == charactersCount) {
             dataLoaded = true;
             if (timerEnded) {
-                openMainActivity();
+                openHousesActivity();
             }
         }
     }
 
-    private void openMainActivity() {
+    private void openHousesActivity() {
         HousesActivity.start(this);
         overridePendingTransition(0, 0);
     }

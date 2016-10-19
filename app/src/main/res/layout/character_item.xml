@@ -9,6 +9,8 @@
 
         <import type="org.odddev.gameofthrones.splash.data.CharacterRow" />
 
+        <import type="org.odddev.gameofthrones.splash.data.CharacterImages"/>
+
         <variable
             name="character"
             type="CharacterRow" />
@@ -30,7 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/avatar_margin_left"
             android:layout_marginStart="@dimen/avatar_margin_left"
-            android:src="@{character.getIcon(houseId)}"
+            android:src="@{CharacterImages.getIcon(houseId)}"
             tools:ignore="ContentDescription"/>
 
         <LinearLayout

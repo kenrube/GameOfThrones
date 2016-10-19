@@ -1,66 +1,44 @@
 package org.odddev.gameofthrones.splash.data;
 
-import android.support.annotation.DrawableRes;
+import android.os.Parcelable;
 
-import org.odddev.gameofthrones.R;
+import org.odddev.gameofthrones.core.db.StringListConverter;
 
 import java.io.Serializable;
 import java.util.List;
+
+import io.requery.Convert;
+import io.requery.Entity;
+import io.requery.Key;
+import io.requery.Persistable;
 
 /**
  * @author kenrube
  * @date 16.10.16
  */
 
-public class CharacterRow implements Serializable {
+@Entity
+public interface CharacterRow extends Parcelable, Persistable {
 
-    public int id;
+    @Key
+    int getId();
 
-    public String name;
+    String getName();
 
-    public String born;
+    String getBorn();
 
-    public String died;
+    String getDied();
 
-    public List<String> titles;
+    @Convert(StringListConverter.class)
+    List<String> getTitles();
 
-    public List<String> aliases;
+    @Convert(StringListConverter.class)
+    List<String> getAliases();
 
-    public int fatherId;
+    int getFatherId();
 
-    public int motherId;
+    int getMotherId();
 
-    public List<String> tvSeries;
-
-    @DrawableRes
-    public int getIcon(@HouseItem int id) {
-        switch (id) {
-            default:
-            case HouseItem.STARK: {
-                return R.drawable.stark_icon;
-            }
-            case HouseItem.LANNISTER: {
-                return R.drawable.lannister_icon;
-            }
-            case HouseItem.TARGARYEN: {
-                return R.drawable.targaryen_icon;
-            }
-        }
-    }
-
-    @DrawableRes
-    public int getArms(@HouseItem int id) {
-        switch (id) {
-            default:
-            case HouseItem.STARK: {
-                return R.drawable.stark;
-            }
-            case HouseItem.LANNISTER: {
-                return R.drawable.lannister;
-            }
-            case HouseItem.TARGARYEN: {
-                return R.drawable.targaryen;
-            }
-        }
-    }
+    @Convert(StringListConverter.class)
+    List<String> getTvSeries();
 }

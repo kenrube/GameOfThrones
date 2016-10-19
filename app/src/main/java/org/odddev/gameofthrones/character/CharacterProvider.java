@@ -6,12 +6,16 @@ import org.odddev.gameofthrones.BuildConfig;
 import org.odddev.gameofthrones.core.di.Injector;
 import org.odddev.gameofthrones.core.network.IServerApi;
 import org.odddev.gameofthrones.core.rx.ISchedulersResolver;
-import org.odddev.gameofthrones.core.storage.StorageManager;
 import org.odddev.gameofthrones.splash.data.Character;
 import org.odddev.gameofthrones.splash.data.CharacterRow;
+import org.odddev.gameofthrones.splash.data.CharacterRowEntity;
+import org.odddev.gameofthrones.splash.data.HouseRow;
+import org.odddev.gameofthrones.splash.data.HouseRowEntity;
 
 import javax.inject.Inject;
 
+import io.requery.Persistable;
+import io.requery.rx.SingleEntityStore;
 import rx.Observable;
 
 /**
@@ -29,9 +33,8 @@ public class CharacterProvider implements ICharacterProvider {
     @Inject
     IServerApi mServerApi;
 
-
     @Inject
-    StorageManager mStorageManager;
+    SingleEntityStore<Persistable> mRequery;
 
     public CharacterProvider() {
         Injector.getAppComponent().inject(this);
@@ -39,17 +42,24 @@ public class CharacterProvider implements ICharacterProvider {
 
     @Override
     public Observable<String> loadWords(int houseId) {
-        if (mStorageManager.loadHouse(houseId) != null) {
-            return Observable.just(mStorageManager.loadHouse(houseId).words);
-        } else {
-            return Observable.just(null);
-        }
+        return mRequery
+                .select(HouseRow.class)
+                .where(HouseRowEntity.ID.equal(houseId))
+                .get()
+                .toObservable()
+                .map(HouseRow::getWords)
+                .compose(mSchedulersResolver.applyDefaultSchedulers());
     }
 
     @Override
     public Observable<CharacterRow> loadCharacter(int characterId) {
-        if (mStorageManager.loadCharacter(characterId) != null) {
-            return Observable.just(mStorageManager.loadCharacter(characterId));
+        CharacterRow character = mRequery
+                .select(CharacterRow.class)
+                .where(CharacterRowEntity.ID.equal(characterId))
+                .get()
+                .firstOrNull();
+        if (character != null) {
+            return Observable.just(character);
         } else {
             return mServerApi
                     .getCharacter(characterId)
@@ -58,18 +68,20 @@ public class CharacterProvider implements ICharacterProvider {
         }
     }
 
-    private CharacterRow saveCharacterToDb(Character character) {
-        CharacterRow characterRow = new CharacterRow();
-        characterRow.id = characterIdFromUrl(character.url);
-        characterRow.name = character.name;
-        characterRow.born = character.born;
-        characterRow.died = character.died;
-        characterRow.titles = character.titles;
-        characterRow.aliases = character.aliases;
-        characterRow.fatherId = characterIdFromUrl(character.father);
-        characterRow.motherId = characterIdFromUrl(character.mother);
-        characterRow.tvSeries = character.tvSeries;
-        mStorageManager.saveCharacter(characterRow);
+    private CharacterRowEntity saveCharacterToDb(Character character) {
+        CharacterRowEntity characterRow = new CharacterRowEntity();
+        characterRow.setId(characterIdFromUrl(character.url));
+        characterRow.setName(character.name);
+        characterRow.setBorn(character.born);
+        characterRow.setDied(character.died);
+        characterRow.setTitles(character.titles);
+        characterRow.setAliases(character.aliases);
+        characterRow.setFatherId(characterIdFromUrl(character.father));
+        characterRow.setMotherId(characterIdFromUrl(character.mother));
+        characterRow.setTvSeries(character.tvSeries);
+        mRequery
+                .upsert(characterRow)
+                .subscribe();
         return characterRow;
     }
 

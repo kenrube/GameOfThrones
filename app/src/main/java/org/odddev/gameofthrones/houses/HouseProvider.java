@@ -4,15 +4,17 @@ import android.content.Context;
 
 import org.odddev.gameofthrones.core.di.Injector;
 import org.odddev.gameofthrones.core.rx.ISchedulersResolver;
-import org.odddev.gameofthrones.core.storage.StorageManager;
 import org.odddev.gameofthrones.splash.data.CharacterRow;
+import org.odddev.gameofthrones.splash.data.CharacterRowEntity;
 import org.odddev.gameofthrones.splash.data.HouseRow;
+import org.odddev.gameofthrones.splash.data.HouseRowEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.requery.Persistable;
+import io.requery.rx.SingleEntityStore;
 import rx.Observable;
 
 /**
@@ -29,7 +31,7 @@ public class HouseProvider implements IHouseProvider {
     ISchedulersResolver mSchedulersResolver;
 
     @Inject
-    StorageManager mStorageManager;
+    SingleEntityStore<Persistable> mRequery;
 
     public HouseProvider() {
         Injector.getAppComponent().inject(this);
@@ -37,12 +39,19 @@ public class HouseProvider implements IHouseProvider {
 
     @Override
     public Observable<List<CharacterRow>> loadCharacters(int houseId) {
-        HouseRow house = mStorageManager.loadHouse(houseId);
-        List<CharacterRow> characters = new ArrayList<>();
-        for (int i = 0; i < house.charactersList.size(); i++) {
-            CharacterRow character = mStorageManager.loadCharacter(house.charactersList.get(i));
-            characters.add(character);
-        }
-        return Observable.just(characters);
+        return mRequery
+                .select(HouseRow.class)
+                .where(HouseRowEntity.ID.equal(houseId))
+                .get()
+                .toObservable()
+                .map(HouseRow::getCharactersList)
+                .flatMap(Observable::from)
+                .flatMap(characterId -> mRequery
+                        .select(CharacterRow.class)
+                        .where(CharacterRowEntity.ID.equal(characterId))
+                        .get()
+                        .toObservable())
+                .toList()
+                .compose(mSchedulersResolver.applyDefaultSchedulers());
     }
 }

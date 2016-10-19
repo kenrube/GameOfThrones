@@ -11,6 +11,8 @@ import rx.Observable;
 
 public interface ISplashProvider {
 
+    Observable<Boolean> isDbEmpty();
+
     Observable<Integer> getCharactersCount();
 
     Observable<CharacterRow> loadCharacters();

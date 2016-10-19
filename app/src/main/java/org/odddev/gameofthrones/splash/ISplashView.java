@@ -9,6 +9,8 @@ import org.odddev.gameofthrones.core.layers.view.IView;
 
 public interface ISplashView extends IView {
 
+    void reportDbState(boolean isEmpty);
+
     void showCharacterLoaded(int charactersLoaded, int charactersCount);
 
     void showError(String error);

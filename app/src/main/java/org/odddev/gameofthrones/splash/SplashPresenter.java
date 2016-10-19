@@ -18,6 +18,7 @@ import timber.log.Timber;
 
 public class SplashPresenter extends Presenter<ISplashView> {
 
+    private Subscription mCheckDbSubscription;
     private Subscription mDataLoadingSubscription;
 
     private int mCharactersCount;
@@ -36,10 +37,33 @@ public class SplashPresenter extends Presenter<ISplashView> {
         Injector.getAppComponent().inject(this);
     }
 
+    void checkDbEmpty() {
+        mCheckDbSubscription = mProvider
+                .isDbEmpty()
+                .subscribe(
+                        this::reportDbState,
+                        throwable -> Timber.e(throwable, throwable.getLocalizedMessage()),
+                        () -> mCompositeSubscription.remove(mCheckDbSubscription));
+        mCompositeSubscription.add(mCheckDbSubscription);
+    }
+
     void loadData() {
         mDataLoadingSubscription = mProvider
                 .getCharactersCount()
+                .flatMap(charactersCount -> {
+                    mCharactersCount = charactersCount;
+                    return mProvider
+                            .loadCharacters();
+                })
                 .subscribe(
+                        character -> showCharacterLoaded(),
+                        throwable -> {
+                            Timber.e(throwable, throwable.getLocalizedMessage());
+                            showError(throwable.getLocalizedMessage());
+                        },
+                        () -> mCompositeSubscription.remove(mDataLoadingSubscription)
+                );
+                /*.subscribe(
                         charactersCount -> {
                             mCharactersCount = charactersCount;
                             mProvider
@@ -56,9 +80,14 @@ public class SplashPresenter extends Presenter<ISplashView> {
                         throwable -> {
                             Timber.e(throwable, throwable.getLocalizedMessage());
                             showError(throwable.getLocalizedMessage());
-                        }
-                );
+                        });*/
         mCompositeSubscription.add(mDataLoadingSubscription);
+    }
+
+    private void reportDbState(boolean isEmpty) {
+        for (ISplashView view : getViews()) {
+            view.reportDbState(isEmpty);
+        }
     }
 
     private void showCharacterLoaded() {

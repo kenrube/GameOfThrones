@@ -10,6 +10,8 @@
 
         <import type="org.odddev.gameofthrones.splash.data.CharacterRow"/>
 
+        <import type="org.odddev.gameofthrones.splash.data.CharacterImages"/>
+
         <import type="org.odddev.gameofthrones.core.utils.StringUtils"/>
 
         <import type="android.text.TextUtils"/>
@@ -68,9 +70,10 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/character_image_height"
-                    android:scaleType="centerCrop"
-                    android:src="@{character.getArms(houseId)}"
-                    app:layout_collapseMode="parallax"/>
+                    android:scaleType="fitXY"
+                    android:src="@{CharacterImages.getArms(houseId)}"
+                    app:layout_collapseMode="parallax"
+                    tools:src="@drawable/stark"/>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"

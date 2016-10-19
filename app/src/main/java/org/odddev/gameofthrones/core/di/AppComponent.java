@@ -5,7 +5,6 @@ import org.odddev.gameofthrones.character.CharacterPresenter;
 import org.odddev.gameofthrones.character.CharacterProvider;
 import org.odddev.gameofthrones.core.network.NetworkChecker;
 import org.odddev.gameofthrones.core.network.NetworkModule;
-import org.odddev.gameofthrones.core.storage.StorageModule;
 import org.odddev.gameofthrones.houses.HousePresenter;
 import org.odddev.gameofthrones.houses.HouseProvider;
 import org.odddev.gameofthrones.splash.SplashActivity;
@@ -26,8 +25,7 @@ import dagger.Component;
         AppModule.class,
         PresentersModule.class,
         NetworkModule.class,
-        ProvidersModule.class,
-        StorageModule.class
+        ProvidersModule.class
 })
 public interface AppComponent {
 

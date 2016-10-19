@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import org.odddev.gameofthrones.BR;
 import org.odddev.gameofthrones.R;
 import org.odddev.gameofthrones.core.di.Injector;
 import org.odddev.gameofthrones.core.layers.presenter.PresenterManager;
@@ -63,7 +62,7 @@ public class CharacterActivity extends AppCompatActivity implements ICharacterVi
         mBinding = DataBindingUtil.setContentView(this, R.layout.character_activity);
         mPresenter = PresenterManager.getPresenter(PRESENTER_ID, CharacterPresenter::new);
 
-        mCharacter = (CharacterRow) getIntent().getSerializableExtra(CHARACTER_ID);
+        mCharacter = getIntent().getParcelableExtra(CHARACTER_ID);
         mHouseId = getIntent().getIntExtra(HOUSE_ID, HouseItem.STARK);
 
         mBinding.setActionsHandler(this);
@@ -81,11 +80,11 @@ public class CharacterActivity extends AppCompatActivity implements ICharacterVi
         mPresenter.attachView(this);
 
         mPresenter.loadWords(mHouseId);
-        if (mCharacter.fatherId != -1) {
-            mPresenter.loadFather(mCharacter.fatherId);
+        if (mCharacter.getFatherId() != -1) {
+            mPresenter.loadFather(mCharacter.getFatherId());
         }
-        if (mCharacter.motherId != -1) {
-            mPresenter.loadMother(mCharacter.motherId);
+        if (mCharacter.getMotherId() != -1) {
+            mPresenter.loadMother(mCharacter.getMotherId());
         }
     }
 
@@ -105,8 +104,10 @@ public class CharacterActivity extends AppCompatActivity implements ICharacterVi
     }
 
     private void showMessageIfCharacterDead() {
-        List<String> tvSeries = mCharacter.tvSeries;
-        if (!TextUtils.isEmpty(mCharacter.died) && tvSeries.size() != 0) {
+        List<String> tvSeries = mCharacter.getTvSeries();
+        if (!TextUtils.isEmpty(mCharacter.getDied())
+                && tvSeries.size() != 0
+                && !TextUtils.isEmpty(tvSeries.get(tvSeries.size() - 1))) {
             String season = tvSeries.get(tvSeries.size() - 1).substring(SEASON_PREFIX.length());
             Snackbar.make(mBinding.getRoot(), getString(R.string.character_message_died, season),
                     Snackbar.LENGTH_LONG).show();
@@ -127,21 +128,19 @@ public class CharacterActivity extends AppCompatActivity implements ICharacterVi
     @Override
     public void showWords(String words) {
         mBinding.setWords(words);
-        mBinding.notifyPropertyChanged(BR.words);
     }
 
     @Override
     public void showFather(CharacterRow father) {
         mFather = father;
-        mBinding.setFather(father.name);
-        mBinding.notifyPropertyChanged(BR.father);
+        mBinding.setFather(father.getName());
     }
 
     @Override
     public void showMother(CharacterRow mother) {
         mMother = mother;
-        mBinding.setMother(mother.name);
-        mBinding.notifyPropertyChanged(BR.mother);
+        mBinding.setMother(mother.getName());
+        //mBinding.notifyPropertyChanged(BR.mother);
     }
 
     @Override
@@ -151,11 +150,11 @@ public class CharacterActivity extends AppCompatActivity implements ICharacterVi
 
     public void openFather() {
         finish();
-        CharacterActivity.start(this, mFather, mHouseId);
+        start(this, mFather, mHouseId);
     }
 
     public void openMother() {
         finish();
-        CharacterActivity.start(this, mMother, mHouseId);
+        start(this, mMother, mHouseId);
     }
 }
