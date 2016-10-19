@@ -63,24 +63,6 @@ public class SplashPresenter extends Presenter<ISplashView> {
                         },
                         () -> mCompositeSubscription.remove(mDataLoadingSubscription)
                 );
-                /*.subscribe(
-                        charactersCount -> {
-                            mCharactersCount = charactersCount;
-                            mProvider
-                                    .loadCharacters()
-                                    .subscribe(
-                                            character -> showCharacterLoaded(),
-                                            throwable -> {
-                                                Timber.e(throwable, throwable.getLocalizedMessage());
-                                                showError(throwable.getLocalizedMessage());
-                                            }
-
-                                    );
-                        },
-                        throwable -> {
-                            Timber.e(throwable, throwable.getLocalizedMessage());
-                            showError(throwable.getLocalizedMessage());
-                        });*/
         mCompositeSubscription.add(mDataLoadingSubscription);
     }
 
