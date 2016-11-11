@@ -34,6 +34,7 @@ public class SplashProvider implements ISplashProvider {
 
     private static final String HOUSES_PATH = "houses/";
     private static final String CHARACTER_PATH = "characters/";
+    private static final int MAX_CONCURRENT = 4;
 
     @Inject
     ISchedulersResolver mSchedulersResolver;
@@ -89,8 +90,7 @@ public class SplashProvider implements ISplashProvider {
                 .flatMap(Observable::from)
                 .map(house -> saveHouseToDb(house).getCharactersList())
                 .flatMap(Observable::from)
-                .flatMap(characterId -> mServerApi.getCharacter(characterId),
-                        Runtime.getRuntime().availableProcessors())
+                .flatMap(characterId -> mServerApi.getCharacter(characterId), MAX_CONCURRENT)
                 .map(this::saveCharacterToDb)
                 .compose(mSchedulersResolver.applyDefaultSchedulers());
     }

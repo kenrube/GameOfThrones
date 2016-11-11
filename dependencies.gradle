@@ -1,14 +1,14 @@
 ext.versions = [
         major                   : 0,
         minor                   : 0,
-        patch                   : 2,
+        patch                   : 3,
 
         minSdk                  : 16,
         targetSdk               : 23,
         compileSdk              : 23,
         buildTools              : '24.0.1',
 
-        androidGradlePlugin     : '2.2.1',
+        androidGradlePlugin     : '2.2.2',
         aptGradlePlugin         : '1.8',
         retrolambdaGradlePlugin : '3.2.5',
 
@@ -73,6 +73,6 @@ ext.urls = [
 ]
 
 ext.resVals = [
-        appNameDebug : "Золотарев Иван [debug version]",
-        appName      : "Золотарев Иван",
+        appNameDebug : "Game of Thrones [debug]",
+        appName      : "Game of Thrones",
 ]

@@ -1,7 +1,5 @@
 package org.odddev.gameofthrones.core.rx;
 
-import java.util.concurrent.Executors;
-
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -13,11 +11,6 @@ import rx.schedulers.Schedulers;
  */
 
 public class SchedulersResolver implements ISchedulersResolver {
-
-    private Scheduler newThreadScheduler() {
-        return Schedulers.from(Executors.newFixedThreadPool(
-                Runtime.getRuntime().availableProcessors()));
-    }
 
     @Override
     public Scheduler ioScheduler() {
@@ -31,7 +24,7 @@ public class SchedulersResolver implements ISchedulersResolver {
 
     public <T> Observable.Transformer<T, T> applyDefaultSchedulers() {
         return observable -> observable
-                .subscribeOn(newThreadScheduler())
+                .subscribeOn(ioScheduler())
                 .observeOn(mainThreadScheduler());
     }
 }
