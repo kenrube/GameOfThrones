@@ -2,11 +2,13 @@
 
 Test project for [SkillBranch's Android Middle course](http://skill-branch.ru/android.html). It uses [an API of Ice and Fire](https://anapioficeandfire.com/) to show information about main houses of Westeros: Stark, Lannister and Targarien.
 
+If you want to try this app you can compile it from source or use [compiled apk](https://github.com/kenrube/GameOfThrones/blob/master/GameOfThrones-%7B0.0.3%7D-debug.apk).
+
 ##Screenshots
 
-Splash screen                                                                   |  House of Lannister                                                              |  Person page                                                                     |  Person page (continue)                                                          |  Navigation menu                                                                 |
-:------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------:|
-![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_1.png)  |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_2.png)  |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_3.png)  |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_4.png)  |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_5.png)  |
+Splash screen  |  House of Lannister  |  Person page  |  Person page (continue)  |  Navigation menu  | 
+:-------------:|:--------------------:|:-------------:|:------------------------:|:-----------------:|
+![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_1.png)   |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_2.png)   |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_3.png)   |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_4.png)   |  ![](https://github.com/kenrube/GameOfThrones/blob/master/screens/screen_5.png)   |
 
 ## License
 MIT License
